@@ -16,9 +16,5 @@ class LikesController < ApplicationController
            like.destroy
            @rs = Post.find(params[:id])
        end
-       
-       respond_to do |format|
-         format.js
-       end
   end
 end
