@@ -1,0 +1,7 @@
+(function($){
+    $("#reply_content").val("");
+    $("#rr").append("<p><%= @reply.user.username %>: <%= @reply.content %></p>
+                                <a href="/real_story/<%=@reply.post_id%>/destroy/<%= @reply.id %>">
+                                    <i style="color:#212121; font-size:10px" class="fas fa-eraser reply_icon"></i>
+                                </a><br>");
+})(jQuery)

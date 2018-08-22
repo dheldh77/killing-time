@@ -1,0 +1,56 @@
+<section class="logB">
+  <div class="container">
+    <div class="noti">
+      <div class="item">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>무서워하지마세요</h2>
+        <p>단지 재밌을려고 만든 사이트입니다</p>
+      </div>
+      <div class="item">
+        <i class="far fa-smile"></i>
+        <h2>우리는 건전합니다</h2>
+        <p>악의적인 의도없이 소통하는 사이트입니다</p>
+      </div>
+      <div class="item">
+        <i class="fas fa-dove"></i>
+        <h2>평화를 추구합니다</h2>
+        <p>서로를 비방하거나 범죄를 도모하는 것을 막습니다.</p>
+      </div>
+    </div>
+    <div class="signup">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
+    
+      <div class="field">
+        <%= f.label :username %><br />
+        <%= f.text_field :username, autofocus: true, class: 'my-input' %>
+      </div>
+    
+      <div class="field">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autocomplete: "email",class: 'my-input' %>
+      </div>
+    
+      <div class="field">
+        <%= f.label :password %>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "off",class: 'my-input' %>
+      </div>
+    
+      <div class="field">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off",class: 'my-input' %>
+      </div>
+    
+      <div class="actions">
+        <%= f.submit "Sign up", class: 'my-btn' %>
+      </div>
+    <% end %>
+    
+    <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</section>
+

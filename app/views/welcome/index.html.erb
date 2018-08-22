@@ -1,0 +1,78 @@
+<div class="welcomeA">
+  <div id="columns">
+    <% @posts.each do |p| %>
+      <a href="/real_story/<%=p.id%>">
+        <figure>
+            <% if p.image.first.nil? %>
+              <img src="/assets/bg.jpg"></img>
+            <% else %>
+                <%= image_tag p.image.first %>
+            <% end %>
+            <div class="content">
+              <figcaption><%= p.title %></figcaption>
+              <div class="like">
+                <i style="color: rgb(184,0,0);" class="fas fa-skull"></i>
+                <p><%= p.liked_users.size%>명</p>
+              </div>
+            </div>
+        </figure>
+      </a>
+    <% end %>
+    
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/rapunzel.jpg">
+        <figcaption>Rapunzel, clothed in 1820’s period fashion</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/rapunzel.jpg">
+        <figcaption>Rapunzel, clothed in 1820’s period fashion</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/belle.jpg">
+        <figcaption>Belle, based on 1770’s French court fashion</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/mulan_2.jpg">
+        <figcaption>Mulan, based on the Ming Dynasty period</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/mulan_2.jpg">
+        <figcaption>Mulan, based on the Ming Dynasty period</figcaption>
+      </a>
+    </figure>
+
+    <figure>
+      <a href="#">
+        <img src="/assets/conD.jpg">
+        <figcaption>Cinderella wearing European fashion of the mid-1860’s</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/rapunzel.jpg">
+        <figcaption>Rapunzel, clothed in 1820’s period fashion</figcaption>
+      </a>
+    </figure>
+  
+    <figure>
+      <a href="#">
+        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/belle.jpg">
+        <figcaption>Belle, based on 1770’s French court fashion</figcaption>
+      </a>
+    </figure>
+  </div>
+</div>

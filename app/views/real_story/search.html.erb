@@ -1,0 +1,237 @@
+<!--행님 요거이 저희가 덤벼야할 모달태그입니다-->
+<section class="view-modal">
+  <div class="container">
+    <div class="modal fade" id="view-content" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="image">
+              요기 그림
+            </div>
+            <div class="content">
+              요기 내용
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="new">
+  <div class="modal fade create-new" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="container">
+          <div class="modal-header">
+            <h5 class="modal-title">새 글쓰기</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="/real_story" method="post" enctype="multipart/form-data">
+            <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">제목</label>
+              <!--type에 email을 넣으면 email 형식만 입력받는다.-->
+              <input name="input_title" type="text" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">내용</label>
+              <!--rows는 처음 창의 크기를 결정한다.-->
+              <textarea name="input_content" class="form-control" id="textarea1" rows="10" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <!--이미지 파일을 올리기 위한 input tag-->
+            <!--form안에 버튼이 있어야 form에서 입력받은 데이터를 보낸다.-->
+            <!--type을 button이 아니라 submit이라고 해야 데이터를 보낸다.-->
+            
+            <div class="modal-footer">
+              <input style="color: #212121"class="my-input" name="image[]" type="file" accept="image/*" multiple="multiple">
+              <button type="submit" class="my-btn">작성하기</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>  
+</section>
+
+<section class="listA">
+  <div class="container">
+    <div class="news">
+      <% @posts.each do |p| %>
+      <div class="mycard">
+        <div class="card-text">
+          <div class="card-title">
+            <h1><%= p.title %></h1>
+          </div>
+          <div class="detail">
+            <ul>
+              <li><p>
+                <%= p.created_at.to_s.split(" ")[0].split("-").first %> 년
+                <%= p.created_at.to_s.split(" ")[0].split("-")[1] %> 월
+                <%= p.created_at.to_s.split(" ")[0].split("-")[2] %> 일
+                <%= p.created_at.to_s.split(" ")[1].split(":").first %> 시
+                <%= p.created_at.to_s.split(" ")[1].split(":")[1] %> 분
+              </p>
+              </li>
+            </ul>
+          </div>
+          <% if p.image.first.nil? %>
+            <div class="card-photo">
+            </div>
+          <% else %>
+            <div class="bxslider">
+              <% p.image.each do |i| %>
+              <div class="card-photo2">
+                <%= image_tag i %>
+              </div>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="content">
+            <div class="icon">
+              <% if current_user.is_like?(p) %>
+                <%#= link_to "좋아요 취소", likes1_path(p), method: "post" %>
+                <a href="/likes/likes_toggle/<%=p.id%>"><i style="color:rgb(184,0,0);" class="fas fa-skull"></i></a>
+              <% else %>
+                <a href="/likes/likes_toggle/<%=p.id%>"><i class="fas fa-skull"></i></a>
+                <%#= link_to "좋아요", likes1_path(p), :method => "post" %>
+              <% end %>
+              <div>
+                <button type="button" class="search" data-toggle="modal" data-target="#view-content" data-title="<%= p.title %>"><i class="fas fa-search"></i></button>
+                <% if current_user.is_bookmark?(p) %>
+                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="fas fa-bookmark"></i></a>
+                <% else %>
+                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="far fa-bookmark"></i></a>
+                <% end %>
+              </div>
+              
+            </div>
+            <div class="show-bar">
+              <p><%= p.liked_users.size%>명이 무서워합니다.</p>
+              <button class="btn" type="button" data-toggle="collapse" data-target="#collapse<%= p.id%>" aria-expanded="false" aria-controls="collapseExample">
+                <p>내용보기 <i class="fas fa-caret-down"></i></p>
+              </button>
+            </div>
+            
+            <div class="collapse" id="collapse<%= p.id%>">
+              <div class="card card-body">
+                <p><%= p.content %></p>
+              </div>
+            </div>
+            <hr/>
+            <div class="reply" id="rr">
+              <% if p.replies.size > 2 %>
+                <div style="display:flex; justify-content:flex-end;">
+                  <button style="margin-top:5px; padding: 0;" class="btn" type="button" data-toggle="collapse" data-target="#replies<%= p.id %>" aria-expanded="false" aria-controls="collapseExampl">
+                    <p style="font-size: ">댓글 더보기<i style="margin-left: 5px;" class="fas fa-caret-down"></i></p>
+                  </button>
+                </div>
+                
+              <% end %>
+              <% i = 0 %>
+              <% p.replies.each do |r| %>
+                <% if i > 2 %>
+                  <% break %>
+                <% end %>
+                <div class="reply-content" id="rrr">
+                  <p><%= r.user.username %>: <%= r.content %></p>
+                  <a href="/real_story/<%=p.id%>/real_story_reply/<%= r.id %>" data-method="delete">
+                    <i style="color:#212121; font-size:10px" class="fas fa-eraser reply_icon"></i>
+                  </a><br>
+                </div>
+                <% i+= 1 %>
+              <% end %>
+              <% if p.replies.size > 2 %>
+                <div class="collapse" id="replies<%= p.id %>">
+                  <% j = 0 %>
+                  <% p.replies.each do |r| %>
+                    <% if j <3 %>
+                      <% j += 1 %>
+                      <% next %>
+                    <% end %>
+                    <div class="reply-content">
+                        <p><%= r.user.username %>: <%= r.content %></p>
+                      <a href="/real_story/<%=p.id%>/real_story_reply/<%= r.id %>" data-method="delete">
+                          <i style="color:#212121; font-size:10px" class="fas fa-eraser reply_icon"></i>
+                      </a><br>
+                    </div>
+                    <% j += 1 %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <hr>
+            
+            
+            <form action="/real_story/<%=p.id%>/real_story_reply" method="post" data-remote="true">
+              <!--해당 글의 id를 보내는 데 유저에게 안보이게 보낸다. 이름은 post_id로 해서 보낸다.-->
+              <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
+              <input name="post_id" value="<%= p.id %>" hidden="true">
+              <div class="reply-m1">
+                  <!--rows는 처음 창의 크기를 결정한다.-->
+                  <textarea name="content" class="reply-input c1" id="reply_content" rows="1" placeholder="댓글.."></textarea>
+                  <!--전달할 내용이니까 form안에 버튼을 넣어준다. 데이터를 보내려면 type은 submit-->
+                  <button type="submit" class="reply-button c2"><i class="fas fa-ellipsis-h"></i></button>
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    <% end %>
+    </div>
+    <div class="navi">
+      <div class="navi-smail">
+        <ul class="edit">
+          <li><button class="new" type="button" data-toggle="modal" data-target=".create-new"><i class="fas fa-pen"></i>새 글쓰기</button></li>
+        </ul>
+        <ul class="bookmark">
+          <% @bookmarks.each do |p| %>
+            <li>
+              <% if p.image.first.nil? %>
+                <a href="/real_story/<%=p.id%>"><div class="thumb-photo"></a>
+                </div>
+              <% else %>
+                <div class="thumb-photo2">
+                  <a href="/real_story/<%=p.id%>"><%= image_tag p.image.first %></a>
+                </div>
+              <% end %>
+              <a href="/real_story/<%=p.id%>"><h1><%= p.title %></h1></a>
+              <% if current_user.is_bookmark?(p) %>
+                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color: #c7c7c7;"class="fas fa-bookmark icon"></i></a>
+              <% else %>
+                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color:#c7c7c7;" class="far fa-bookmark icon"></i></a>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--<script>-->
+<!--  $("#like_button").click(function(){-->
+<!--    var id = $(this).data("id");-->
+<!--    $.ajax({-->
+<!--        type:"POST",-->
+<!--        url:"/likes/likes_toggle",-->
+<!--        data : {id : id},-->
+<!--        dataType : "json",-->
+<!--        success: function(json){-->
+<!--            console.log(json);-->
+<!--        },-->
+<!--        error: function(xhr, status, error) {-->
+<!--            alert(error);-->
+<!--        }  -->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
