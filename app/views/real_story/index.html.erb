@@ -12,10 +12,23 @@
           </div>
           <div class="modal-body">
             <div class="image">
-              요기 그림
+              <%# @posts.each do |p| %>
+                <%#= p.image %>
+              <%# end %>
+              <!--<p id="view-image"></p>-->
+              <div class="bxslider">
+              <% (0..10).each do |i| %>
+                <div style="height:600px; width:600px;">
+                  <img id="view-image<%= i %>" src="" height="600px">
+                </div>
+                
+                
+              <% end %>
+              </div>  
+              
             </div>
             <div class="content">
-              요기 내용
+              <p id="modal-content"></p>
             </div>
           </div>
         </div>
@@ -97,22 +110,40 @@
           <% end %>
           <div class="content">
             <div class="icon">
+              <!---->
               <% if current_user.is_like?(p) %>
-                <%#= link_to "좋아요 취소", likes1_path(p), method: "post" %>
-                <a href="/likes/likes_toggle/<%=p.id%>"><i style="color:rgb(184,0,0);" class="fas fa-skull"></i></a>
+                <button onClick="like_button('<%=p.id%>')">
+                  <i style="color:rgb(184,0,0);" class="fas fa-skull" id="<%=p.id%>_like_btn"></i>
+                </button>
               <% else %>
-                <a href="/likes/likes_toggle/<%=p.id%>"><i class="fas fa-skull"></i></a>
-                <%#= link_to "좋아요", likes1_path(p), :method => "post" %>
+                <button onClick="like_button('<%=p.id%>')">
+                  <i class="fas fa-skull" id="<%=p.id%>_not_like_btn"></i>
+                </button>
               <% end %>
+              
+              <!--<div class="reply-m1">-->
+              <!--  <textarea name="content" class="reply-input c1" id="<%#=p.id%>_reply_content" rows="1" placeholder="댓글.."></textarea>-->
+              <!--  <button id="test" class="reply-button c2" onClick="reply_create('<%#=p.id%>')"><i class="fas fa-ellipsis-h"></i></button>-->
+              <!--</div>-->
+              
               <div>
-                <button type="button" class="search" data-toggle="modal" data-target="#view-content" data-title="<%= p.title %>"><i class="fas fa-search"></i></button>
+                <button type="button" class="search" data-toggle="modal" data-target="#view-content" 
+                <% k = 0 %>
+                <% p.image.each do |i| %>
+                  data-image<%= k %>="<%= i %>"
+                  <% k += 1 %>
+                <% end %>
+                data-size="<%= k %>"
+                data-content="<%= p.content %>"
+                data-title="<%= p.title %>">
+                  <i class="fas fa-search"></i>
+                </button>
                 <% if current_user.is_bookmark?(p) %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="fas fa-bookmark"></i></a>
+                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>" data-method="post"><i class="fas fa-bookmark"></i></a>
                 <% else %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="far fa-bookmark"></i></a>
+                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>" data-method="post"><i class="far fa-bookmark"></i></a>
                 <% end %>
               </div>
-              
             </div>
             <div class="show-bar">
               <p><%= p.liked_users.size%>명이 무서워합니다.</p>
@@ -123,11 +154,11 @@
             
             <div class="collapse" id="collapse<%= p.id%>">
               <div class="card card-body">
-                <p><%= p.content %></p>
+                <p><%= p.content.gsub("\r\n","<br />").html_safe %></p>
               </div>
             </div>
             <hr/>
-            <div class="reply" id="rr">
+            <div class="reply" id="<%=p.id%>_rr">
               <% if p.replies.size > 2 %>
                 <div style="display:flex; justify-content:flex-end;">
                   <button style="margin-top:5px; padding: 0;" class="btn" type="button" data-toggle="collapse" data-target="#replies<%= p.id %>" aria-expanded="false" aria-controls="collapseExampl">
@@ -141,7 +172,7 @@
                 <% if i > 2 %>
                   <% break %>
                 <% end %>
-                <div class="reply-content" id="rrr">
+                <div class="reply-content" id="<%=p.id%>_rrr">
                   <p><%= r.user.username %>: <%= r.content %></p>
                   <a href="/real_story/<%=p.id%>/real_story_reply/<%= r.id %>" data-method="delete">
                     <i style="color:#212121; font-size:10px" class="fas fa-eraser reply_icon"></i>
@@ -169,19 +200,10 @@
               <% end %>
             </div>
             <hr>
-            
-            
-            <form action="/real_story/<%=p.id%>/real_story_reply" method="post" data-remote="true">
-              <!--해당 글의 id를 보내는 데 유저에게 안보이게 보낸다. 이름은 post_id로 해서 보낸다.-->
-              <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
-              <input name="post_id" value="<%= p.id %>" hidden="true">
-              <div class="reply-m1">
-                  <!--rows는 처음 창의 크기를 결정한다.-->
-                  <textarea name="content" class="reply-input c1" id="reply_content" rows="1" placeholder="댓글.."></textarea>
-                  <!--전달할 내용이니까 form안에 버튼을 넣어준다. 데이터를 보내려면 type은 submit-->
-                  <button type="submit" class="reply-button c2"><i class="fas fa-ellipsis-h"></i></button>
-              </div>
-            </form>
+            <div class="reply-m1">
+              <textarea name="content" class="reply-input c1" id="<%=p.id%>_reply_content" rows="1" placeholder="댓글.."></textarea>
+              <button id="test" class="reply-button c2" onClick="reply_create('<%=p.id%>')"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
             
           </div>
         </div>
@@ -197,7 +219,8 @@
           <% @bookmarks.each do |p| %>
             <li>
               <% if p.image.first.nil? %>
-                <a href="/real_story/<%=p.id%>"><div class="thumb-photo"></a>
+                <div class="thumb-photo">
+                  <a href="/real_story/<%=p.id%>"><img src="/assets/bg.jpg"></a>
                 </div>
               <% else %>
                 <div class="thumb-photo2">
@@ -218,20 +241,77 @@
   </div>
 </section>
 
-<!--<script>-->
-<!--  $("#like_button").click(function(){-->
-<!--    var id = $(this).data("id");-->
-<!--    $.ajax({-->
-<!--        type:"POST",-->
-<!--        url:"/likes/likes_toggle",-->
-<!--        data : {id : id},-->
-<!--        dataType : "json",-->
-<!--        success: function(json){-->
-<!--            console.log(json);-->
-<!--        },-->
-<!--        error: function(xhr, status, error) {-->
-<!--            alert(error);-->
-<!--        }  -->
-<!--    });-->
-<!--  });-->
-<!--</script>-->
+<script>
+  function reply_create(_value){
+    var id = _value
+    var content = document.getElementById(_value + "_reply_content").value;
+    // alert(_value);
+    // alert(content);
+      $.ajax({
+          type:"POST",
+          url:"/real_story/"+id+"/real_story_reply",
+          data : {
+            'content' : content,
+            'real_story_id': id
+          },
+          dataType : "json",
+          success: function(e){
+            // alert(e.user.username)
+            $("#"+_value+"_reply_content").val("");
+            $("#"+_value+"_rr").append("<div class=\"reply-content\"><p>"+e.user.username+": "+e.reply.content+"</p>"+
+            "<a href=\"/real_story/"+_value+"/real_story_reply/"+e.reply.id+"\"" + " data-method=\"delete\"><i style=\"color:#212121; font-size:10px\" class=\"fas fa-eraser reply_icon\"></i><br></div>");
+          },
+          error: function(xhr, status, error) {
+              alert(error);
+          }
+      });
+  }
+  
+  function like_button(_value){
+    $.ajax({
+      type:"POST",
+      url: "/likes/likes_toggle/"+_value,
+      dataType: "json",
+      success: function(e){
+          // alert("@");
+        // alert(e.like)
+        if (e.like)
+          // document.getElementById(e.post.id+"_not_like_btn").setAttribute("id",e.post.id+"_like_btn");
+          document.getElementById(e.post.id+"_like_btn").setAttribute("style","color:rgb(184,0,0)");
+        else
+          document.getElementById(e.post.id+"_like_btn").setAttribute("id",e.post.id+"_not_like_btn");
+          // document.getElementById(e.post.id+"_like_btn").removeAttribute("style");
+      },
+      error: function(xhr, status, error){
+        alert(error);
+      }
+    });
+  }
+
+//무한스크롤 코드 
+  var count = 4;
+  var stringTemp = ""
+  function call(){
+      $.ajax({
+          type:"get",
+          url:"/post/ajaxCall",
+          data : {'count' : count},
+          dataType : "json",
+          success: function(data){
+              alert(data[title]);
+          },
+          error: function(error) {
+              alert("#");
+          }  
+      });
+    }
+    
+    var page = 1;
+  
+    $(window).scroll(function() {
+        if ($(document).height() > $(window).height()) {
+           $("#enters").append("<h1>Page</h1>" + page );
+          call();
+        }
+    });
+</script>

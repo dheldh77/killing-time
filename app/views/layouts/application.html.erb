@@ -54,21 +54,31 @@
               <!--내 웹서버의 모든 routes를 보려면 rake routes를 bash창에 쓰면 된다.-->
               
               <button type="button" id="user_func" data-toggle="dropdown" aria-haspopup="true">
-                <i class="far fa-user"></i>
+                <i class="fas fa-user-alt"></i>
               </button>
               <div class="dropdown-menu" aria-label="user_func">
-                <a href="/users/sign_out" data-method="delete" ><%= current_user.username %></a>
-                <a href="/users/sign_out" data-method="delete" >log out</a>
+                <a href="#"><i style="margin-right: 17px;"class="fas fa-id-badge"></i><%= current_user.username %></a>
+                <a href="/users/edit"><i style="margin-right: 11px;" class="fas fa-cogs"></i>edit</a>
+                <a href="/users/sign_out" data-method="delete" ><i style="margin-right: 10px;"class="fas fa-user-minus"></i>log out</a>
               </div>
               
             <% else %>
-              <a href="/users/sign_in"><i class="fas fa-user-alt"></i></a>
+              <a href="/users/sign_in"><i class="far fa-user"></i></a>
             <% end %></li>
         </ul>
       </nav>
     </div>
   </header>
   <%= yield %>
+  <section class="top-btn">
+    <div class="container">
+      <a id="MOVE_TOP_BTN" href="#"><i class="fas fa-angle-up"></i></a>
+    </div>
+  </section>
+    
+    
+  
+  
   <footer>
     <div class="nav">
       <ul>
@@ -96,7 +106,7 @@
       var p = button.data('p');
       var modal = $(this)
 
-      modal.find('form').attr('action','/real_story/update/'+recipient);
+      modal.find('form').attr('action','/real_story/'+recipient);
       modal.find('#edit_title').attr('value',title);
       modal.find('#edit_content').val(content)
       // 아 좃같다 자바스크립트
@@ -104,11 +114,30 @@
   </script>
   <script>
     $('#view-content').on('show.bs.modal', function (event) {
+      alert("!!!");
       var button = $(event.relatedTarget);
       var title = button.data('title');
+      var content = button.data('content');
+      var size = button.data('size');
+      
+      
+      var arr = new Array();
+      for(var i=0; i<size; i++){
+        arr[i] = button.data('image'+i)
+      }
       var modal = $(this)
-
+      
+      for(var i = 0; i<size; i++){
+        // alert(arr[i]);
+        modal.find('#view-image'+i).attr('src',arr[i]);
+      }
+      
+      for(var i = size; i<10; i++){
+        modal.find('#view-image'+i).attr('src',null);
+      }
+      
       modal.find('.modal-title').text(title);
+      modal.find('#modal-content').text(content);
       // 아 좃같다 자바스크립트
     });
   </script>
@@ -119,5 +148,39 @@
         });
     });
   </script>
+  
+  <script>
+    $(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 500) {
+                $('#MOVE_TOP_BTN').fadeIn();
+            } else {
+                $('#MOVE_TOP_BTN').fadeOut();
+            }
+        });
+        
+        $("#MOVE_TOP_BTN").click(function() {
+            $('html, body').animate({
+                scrollTop : 0
+            }, 400);
+            return false;
+        });
+    });
+</script>
+
+<script>
+  // $(function ex(){
+  //   // var str = ("#textarea1").val();
+  //   // alert("@@" +document.getElementById("textarea1").value);
+  //   alert("@@"+("#textarea1").val());
+  //   str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+  //   // alert(str);
+  //   document.getElementById("textarea1").value = str;
+  // });
+
+</script>
+
+<!--댓글달기-->
+
 </body>
 </html>

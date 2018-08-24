@@ -1,6 +1,10 @@
 a{
     text-decoration: none !important;
 }
+
+button{
+    background-color:transparent ;
+}
 input:focus{
     outline:none!important;
 }
@@ -93,10 +97,17 @@ header{
     padding: 15px;
     font-size:24px;
 }
-
+.headB .dropdown-menu{
+    border:none;
+    border-left:1px solid #c7c7c7;
+    margin-top: 3px;
+    background-color:rgba(255,255,255,0.7);
+    
+}
 .headB .dropdown-menu a{
     font-size: 15px!important;
-    padding-top: 5px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 @media(min-width:768px){
     header .container{
@@ -297,6 +308,14 @@ footer .nav a:hover{
     color:rgb(184,0,0);
     transition: .15s;
 }
+.listA .mycard .content .icon button{
+    font-size:24px;
+    color:transparent;
+    padding-left:0 !important;
+    border:none;
+    color:black;
+    cursor:pointer;
+}
 .listA .mycard .reply p {
     overflow:hidden;
     text-overflow:ellipsis;
@@ -365,10 +384,11 @@ footer .nav a:hover{
 .listA .mycard .card-photo{
     width: 600px;
     height:400px;
-    background-image:url(bg.jpg);
+    background-image:url(9.jpg);
     background-position: center;
     background-size: cover;
 }
+
 .listA .mycard .bx-wrapper{
     border:none;
     background-color:black;
@@ -405,7 +425,7 @@ footer .nav a:hover{
     overflow-x: hidden;
 }
 .listA .navi-smail{
-    padding-top:10px;
+    padding-top:48px;
     position: fixed;
     margin-right:0;
 }
@@ -419,14 +439,17 @@ footer .nav a:hover{
 }
 
 .listA .navi .edit .new{
+    margin-right:45px;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
 }
+
 .listA .navi ul{
     list-style: none;
 }
 .listA .navi a {
+    text-align:left;
     text-decoration: none;
     font-size: 25px;
     color: #212121;
@@ -470,6 +493,7 @@ footer .nav a:hover{
     margin-bottom: 15px;
     padding:10px;
     border-radius: 5px;
+    transition: .5s;
 }
 
 #columns figure .content{
@@ -492,8 +516,10 @@ footer .nav a:hover{
 }
 
 #columns figure:hover{
-    background-color: #eeeeee!important;
-    transition: 1s;
+    box-shadow: 1px 1px #c7c7c7;
+    /*background-color: #eeeeee!important;*/
+    transition: .5s;
+    transform: scale(1.04);
 }
 
 #columns figure img{
@@ -636,19 +662,21 @@ footer .nav a:hover{
     margin-right:5px;
 }
 
-.listA .thumb-photo{
+.listA .thumb-photo img{
+    padding:1px;
     /*box-shadow: 0 3px 3px #c7c7c7;*/
     border: 1px solid rgb(184,0,0);
     border-radius:50%;
     width: 40px;
     height:40px;
-    background-image:url(bg.jpg);
-    background-position: center;
-    background-size: cover;
+    /*background-image:url(bg.jpg);*/
+    /*background-position: center;*/
+    /*background-size: cover;*/
 }
 
 
 .listA .thumb-photo2 img{
+    padding:1px;
     border: 1px solid rgb(184,0,0);
     /*box-shadow: 0 3px 3px #d7d7d7;*/
     border-radius:50%;
@@ -754,4 +782,45 @@ footer .nav a:hover{
 
 .view-modal .modal-body .content{
     flex:1;
+}
+
+.view-modal .modal-body .content p{
+    overflow-y: scroll; 
+    height:600px;
+}
+
+a#MOVE_TOP_BTN {
+    display: none;
+    border-radius: 50%;
+    background-color:rgb(184,0,0);
+    color:white;
+    height:40px;
+    width:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.top-btn .container{
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right:auto;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+}
+
+.top-btn{
+    width: 100%;
+    position: fixed;
+    background-color:transparent;
+    height: 70px;
+    z-index: 999;
+    bottom:10px;
+}
+
+@media(max-width:767px){
+    .top-btn{
+        bottom:50px;
+    }
 }

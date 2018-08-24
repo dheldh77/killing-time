@@ -73,8 +73,9 @@ class RealStoryController < ApplicationController
         @post.thumb = uploader.thumb.url
         @post.middle = uploader.middle.url
       end
+      @post.save
     end
-    @post.save
+    
     
     redirect_to  "/real_story/post/my_post"
     # redirect_to  "/post/show/" + params[:id]로 해도 된다.
@@ -130,7 +131,7 @@ class RealStoryController < ApplicationController
     elsif category == "titleContent"
       @posts = Post.where("title LIKE ? OR content LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
     elsif category == "user"
-      @posts = Post.where("username LIKE ?", "%#{params[:q]}%").take.posts
+      @posts = User.where("username LIKE ?", "%#{params[:q]}%").take.posts
     end
     
     @rs = Post.all
@@ -144,21 +145,6 @@ class RealStoryController < ApplicationController
       end
     end
   end
-  
-  # def bookmark_search
-  #   @post = Post.find(params[:id])
-    
-  #   @rs = Post.all
-  #   @bm = Bookmark.where(user_id: current_user.id)
-  #   @bookmarks = []
-  #   @rs.each do |r|
-  #     @bm.each do |b|
-  #       if r.id == b.post_id
-  #         @bookmarks.push(r)
-  #       end
-  #     end
-  #   end
-  # end
   
   def my_post
     @token = form_authenticity_token
@@ -175,4 +161,15 @@ class RealStoryController < ApplicationController
     end
   end
   
+  def ajaxCall
+    count = params[:count].to_i
+    @item = Post.all.at(count)
+    @return_value = {
+      "id" => @item.id, 
+      "username" => @item.user_id, 
+      "title" => @item.title, 
+      "time" => @item.created_at
+    }
+    render json: @return_value
+  end
 end

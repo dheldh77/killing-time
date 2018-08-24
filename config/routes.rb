@@ -4,14 +4,6 @@ Rails.application.routes.draw do
   # end
   # resources :real_story_reply
 
-  get 'bookmarks/bookmarks_toggle/:id', to: 'bookmarks#bookmarks_toggle'
-  post 'bookmarks/bookmarks_toggle/:id', to: 'bookmarks#bookmarks_toggle', as: 'bookmarks'
-
-  get 'welcome/user_data'
-  
-  get 'likes/likes_toggle/:id' => 'likes#likes_toggle'
-  post 'likes/likes_toggle', to: 'likes#likes_toggle', as: "likes"
-
   devise_for :users
   root 'welcome#index'
   get '/welcome/index'
@@ -22,6 +14,19 @@ Rails.application.routes.draw do
   
   resources :real_story_reply
   
+  # get 'bookmarks/bookmarks_toggle/:id', to: 'bookmarks#bookmarks_toggle'
+  post 'bookmarks/bookmarks_toggle/:id', to: 'bookmarks#bookmarks_toggle', as: 'bookmarks'
+
+  get 'welcome/user_data'
+  
+  # get 'likes/likes_toggle/:id' => 'likes#likes_toggle'
+  post 'likes/likes_toggle/:id', to: 'likes#likes_toggle', as: "likes"
+  
+  get 'real_story/post/my_post', to: 'real_story#my_post'
+  
+  get 'real_story/post/search', to: 'real_story#search'
+  
+  get 'post/ajaxCall' => 'post#ajaxCall'
 
 # real_story_routes
   # post 'real_story_reply/create'
@@ -42,9 +47,7 @@ Rails.application.routes.draw do
 
   # get 'real_story/show/:id' => 'real_story#show'
   
-  get 'real_story/post/my_post', to: 'real_story#my_post'
   
-  get 'real_story/post/search', to: 'real_story#search'
   
   
   # get 'real_story/bookmark_search/:id', to: 'real_story#bookmark_search'

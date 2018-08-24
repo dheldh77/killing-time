@@ -12,10 +12,14 @@
           </div>
           <div class="modal-body">
             <div class="image">
-              요기 그림
+              <% @posts.each do |p| %>
+                <% p.image %>
+              <% end %>
+              
+              <img id="view-image" src=""></img>
             </div>
             <div class="content">
-              요기 내용
+              <p id="modal-content"></p>
             </div>
           </div>
         </div>
@@ -105,7 +109,14 @@
                 <%#= link_to "좋아요", likes1_path(p), :method => "post" %>
               <% end %>
               <div>
-                <button type="button" class="search" data-toggle="modal" data-target="#view-content" data-title="<%= p.title %>"><i class="fas fa-search"></i></button>
+                <button type="button" class="search" data-toggle="modal" data-target="#view-content" 
+                <% k = 0 %>
+                <% p.image.each do |i| %>
+                  data-<%= k %>="<%= i %>"
+                  <% k += 1 %>
+                <% end %>
+                data-content="<%= p.content %>"
+                data-title="<%= p.title %>"><i class="fas fa-search"></i></button>
                 <% if current_user.is_bookmark?(p) %>
                   <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="fas fa-bookmark"></i></a>
                 <% else %>
@@ -123,7 +134,7 @@
             
             <div class="collapse" id="collapse<%= p.id%>">
               <div class="card card-body">
-                <p><%= p.content %></p>
+                <p><%= p.content.gsub("\r\n","<br />").html_safe %></p>
               </div>
             </div>
             <hr/>
@@ -169,19 +180,10 @@
               <% end %>
             </div>
             <hr>
-            
-            
-            <form action="/real_story/<%=p.id%>/real_story_reply" method="post" data-remote="true">
-              <!--해당 글의 id를 보내는 데 유저에게 안보이게 보낸다. 이름은 post_id로 해서 보낸다.-->
-              <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
-              <input name="post_id" value="<%= p.id %>" hidden="true">
-              <div class="reply-m1">
-                  <!--rows는 처음 창의 크기를 결정한다.-->
-                  <textarea name="content" class="reply-input c1" id="reply_content" rows="1" placeholder="댓글.."></textarea>
-                  <!--전달할 내용이니까 form안에 버튼을 넣어준다. 데이터를 보내려면 type은 submit-->
-                  <button type="submit" class="reply-button c2"><i class="fas fa-ellipsis-h"></i></button>
-              </div>
-            </form>
+            <div class="reply-m1">
+              <textarea name="content" class="reply-input c1" id="<%=p.id%>_reply_content" rows="1" placeholder="댓글.."></textarea>
+              <button id="test" class="reply-button c2" onClick="abc('<%=p.id%>')"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
             
           </div>
         </div>
@@ -197,7 +199,8 @@
           <% @bookmarks.each do |p| %>
             <li>
               <% if p.image.first.nil? %>
-                <a href="/real_story/<%=p.id%>"><div class="thumb-photo"></a>
+                <div class="thumb-photo">
+                  <a href="/real_story/<%=p.id%>"><img src="/assets/bg.jpg"></a>
                 </div>
               <% else %>
                 <div class="thumb-photo2">
@@ -235,3 +238,31 @@
 <!--    });-->
 <!--  });-->
 <!--</script>-->
+
+
+<script>
+  function reply_create(_value){
+    var id = _value
+    var content = document.getElementById(_value + "_reply_content").value;
+    // alert(_value);
+    // alert(content);
+      $.ajax({
+          type:"POST",
+          url:"/real_story/"+id+"/real_story_reply",
+          data : {
+            'content' : content,
+            'real_story_id': id
+          },
+          dataType : "json",
+          success: function(e){
+            // alert(e.user.username)
+            $("#"+_value+"_reply_content").val("");
+            $("#"+_value+"_rr").append("<div class=\"reply-content\"><p>"+e.user.username+": "+e.reply.content+"</p>"+
+            "<a href=\"/real_story/"+_value+"/real_story_reply/"+e.reply.id+"\"" + " data-method=\"delete\"><i style=\"color:#212121; font-size:10px\" class=\"fas fa-eraser reply_icon\"></i><br></div>");
+          },
+          error: function(xhr, status, error) {
+              alert(error);
+          }
+      });
+  }
+</script>
