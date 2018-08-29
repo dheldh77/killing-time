@@ -4,32 +4,15 @@
     <div class="modal fade" id="view-content" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+          
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="title_place">Modal title</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="image">
-              <%# @posts.each do |p| %>
-                <%#= p.image %>
-              <%# end %>
-              <!--<p id="view-image"></p>-->
-              <div class="bxslider">
-              <% (0..10).each do |i| %>
-                <div style="height:600px; width:600px;">
-                  <img id="view-image<%= i %>" src="" height="600px">
-                </div>
-                
-                
-              <% end %>
-              </div>  
-              
-            </div>
-            <div class="content">
-              <p id="modal-content"></p>
-            </div>
+          <div class="modal-body" id="modal_body">
+            
           </div>
         </div>
       </div>
@@ -48,32 +31,26 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form action="/real_story" method="post" enctype="multipart/form-data">
-            <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
-            <div class="form-group">
-              <label for="exampleFormControlInput1">제목</label>
-              <!--type에 email을 넣으면 email 형식만 입력받는다.-->
-              <input name="input_title" type="text" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력하세요">
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlTextarea1">내용</label>
-              <!--rows는 처음 창의 크기를 결정한다.-->
-              <textarea name="input_content" class="form-control" id="textarea1" rows="10" placeholder="내용을 입력하세요"></textarea>
-            </div>
-            <!--이미지 파일을 올리기 위한 input tag-->
-            <!--form안에 버튼이 있어야 form에서 입력받은 데이터를 보낸다.-->
-            <!--type을 button이 아니라 submit이라고 해야 데이터를 보낸다.-->
+          
+          <div class="create_post">
+            <label for="exampleFormControlInput1">제목</label>
+            <input type="text" class="form-control" id="input_title" placeholder="제목을 입력하세요">
+            
+            <label for="exampleFormControlTextarea1">내용</label>
+            <textarea class="form-control" id="input_content" rows="10" placeholder="내용을 입력하세요"></textarea>
             
             <div class="modal-footer">
-              <input style="color: #212121"class="my-input" name="image[]" type="file" accept="image/*" multiple="multiple">
-              <button type="submit" class="my-btn">작성하기</button>
+              <input style="color: #212121" id="input_image" class="my-input" name="image[]" type="file" accept="image/*" multiple="multiple" onchange="handleFiles(this.files)">
+              <button type="submit" class="my-btn" onClick="create_post()">작성하기</button>
             </div>
-          </form>
+          </div>
+          
         </div>
       </div>
     </div>
   </div>  
 </section>
+
 
 <section class="listA">
   <div class="container">
@@ -110,43 +87,35 @@
           <% end %>
           <div class="content">
             <div class="icon">
-              <!---->
               <% if current_user.is_like?(p) %>
                 <button onClick="like_button('<%=p.id%>')">
-                  <i style="color:rgb(184,0,0);" class="fas fa-skull" id="<%=p.id%>_like_btn"></i>
+                  <i style="color:rgb(184,0,0);" class="fas fa-skull <%=p.id%>_like_btn" id="<%=p.id%>_like_btn"></i>
                 </button>
               <% else %>
                 <button onClick="like_button('<%=p.id%>')">
-                  <i class="fas fa-skull" id="<%=p.id%>_not_like_btn"></i>
+                  <i class="fas fa-skull <%=p.id%>_like_btn"></i>
                 </button>
               <% end %>
               
-              <!--<div class="reply-m1">-->
-              <!--  <textarea name="content" class="reply-input c1" id="<%#=p.id%>_reply_content" rows="1" placeholder="댓글.."></textarea>-->
-              <!--  <button id="test" class="reply-button c2" onClick="reply_create('<%#=p.id%>')"><i class="fas fa-ellipsis-h"></i></button>-->
-              <!--</div>-->
-              
               <div>
-                <button type="button" class="search" data-toggle="modal" data-target="#view-content" 
-                <% k = 0 %>
-                <% p.image.each do |i| %>
-                  data-image<%= k %>="<%= i %>"
-                  <% k += 1 %>
-                <% end %>
-                data-size="<%= k %>"
-                data-content="<%= p.content %>"
-                data-title="<%= p.title %>">
+                <button onClick="post_show('<%=p.id%>')" data-toggle="modal" data-target="#view-content" class="search">
                   <i class="fas fa-search"></i>
                 </button>
+                
                 <% if current_user.is_bookmark?(p) %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>" data-method="post"><i class="fas fa-bookmark"></i></a>
+                  <button onClick="bookmark_button('<%=p.id%>')">
+                    <i class="fas fa-bookmark <%=p.id%>_bookmark_btn"></i>
+                  </button>
                 <% else %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>" data-method="post"><i class="far fa-bookmark"></i></a>
+                  <button onClick="bookmark_button('<%=p.id%>')">
+                    <i class="far fa-bookmark <%=p.id%>_bookmark_btn"></i>
+                  </button>
                 <% end %>
               </div>
+              
             </div>
             <div class="show-bar">
-              <p><%= p.liked_users.size%>명이 무서워합니다.</p>
+              <p id="<%=p.id%>_like_num"><%= p.liked_users.size%>명이 무서워합니다.</p>
               <button class="btn" type="button" data-toggle="collapse" data-target="#collapse<%= p.id%>" aria-expanded="false" aria-controls="collapseExample">
                 <p>내용보기 <i class="fas fa-caret-down"></i></p>
               </button>
@@ -204,7 +173,6 @@
               <textarea name="content" class="reply-input c1" id="<%=p.id%>_reply_content" rows="1" placeholder="댓글.."></textarea>
               <button id="test" class="reply-button c2" onClick="reply_create('<%=p.id%>')"><i class="fas fa-ellipsis-h"></i></button>
             </div>
-            
           </div>
         </div>
       </div>
@@ -217,7 +185,7 @@
         </ul>
         <ul class="bookmark">
           <% @bookmarks.each do |p| %>
-            <li>
+            <li id="<%=p.id%>_bookmark_list">
               <% if p.image.first.nil? %>
                 <div class="thumb-photo">
                   <a href="/real_story/<%=p.id%>"><img src="/assets/bg.jpg"></a>
@@ -229,9 +197,9 @@
               <% end %>
               <a href="/real_story/<%=p.id%>"><h1><%= p.title %></h1></a>
               <% if current_user.is_bookmark?(p) %>
-                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color: #c7c7c7;"class="fas fa-bookmark icon"></i></a>
+                <button onClick="bookmark_button('<%=p.id%>')"><i style="color: #c7c7c7;"class="fas fa-bookmark icon"></i></button>
               <% else %>
-                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color:#c7c7c7;" class="far fa-bookmark icon"></i></a>
+                <button onClick="bookmark_button('<%=p.id%>')"><i style="color:#c7c7c7;" class="far fa-bookmark icon"></i></button>
               <% end %>
             </li>
           <% end %>
@@ -274,44 +242,138 @@
       dataType: "json",
       success: function(e){
           // alert("@");
-        // alert(e.like)
+        // alert(str);
         if (e.like)
-          // document.getElementById(e.post.id+"_not_like_btn").setAttribute("id",e.post.id+"_like_btn");
-          document.getElementById(e.post.id+"_like_btn").setAttribute("style","color:rgb(184,0,0)");
+          document.getElementsByClassName(_value+"_like_btn")[0].setAttribute("style","color:rgb(184,0,0)");
         else
-          document.getElementById(e.post.id+"_like_btn").setAttribute("id",e.post.id+"_not_like_btn");
-          // document.getElementById(e.post.id+"_like_btn").removeAttribute("style");
+          document.getElementsByClassName(_value+"_like_btn")[0].removeAttribute("style");
+        document.getElementById(_value+"_like_num").innerHTML = e.size + "명이 무서워합니다.";  
       },
       error: function(xhr, status, error){
         alert(error);
       }
     });
   }
+  
+  function bookmark_button(_value){
+    $.ajax({
+      type:"POST",
+      url: "/bookmarks/bookmarks_toggle/"+_value,
+      dataType: "json",
+      success: function(e){
+          // alert("@");
+        // alert(str);
+        // alert(e.bookmark);
+        if (e.bookmark){
+          document.getElementsByClassName(_value+"_bookmark_btn")[0].setAttribute("class","fas fa-bookmark " + _value + "_bookmark_btn");
+          $(".bookmark").append("<li id=\""+_value+"_bookmark_list\">");
+          
+          if (e.image[0] == null){
+            $("#"+_value+"_bookmark_list").append("<div class=\"thumb-photo\"><a href=\"/real_story/"+e.id+"\"><img src=\"/assets/bg.jpg\"></a></div>");
+          }
+          else{
+            $("#"+_value+"_bookmark_list").append("<div class=\"thumb-photo2\"><a href=\"/real_story/"+e.id+"\"><img src=" + e.image[0] + "></img></a></div>");
+          }
+          $("#"+_value+"_bookmark_list").append("<a href=\"/real_story/"+e.id+"\"><h1>"+e.title+"</h1></a>");
+          $("#"+_value+"_bookmark_list").append("<button onClick=\"bookmark_button('"+e.id+"')\"><i style=\"color: #c7c7c7;\"class=\"fas fa-bookmark icon\"></i></button>");
+          $(".bookmark").append("</li>");
+        }
+        else{
+          document.getElementsByClassName(_value+"_bookmark_btn")[0].setAttribute("class","far fa-bookmark " + _value + "_bookmark_btn");
+          var x = document.getElementById(_value+"_bookmark_list");
+          x.remove(x.selectedIndex);
+        }
+      },
+      error: function(xhr, status, error){
+        alert(error);
+      }
+    });
+  }
+  
+  function create_post(){
+    var title = document.getElementById("input_title").value;
+    var content = document.getElementById("input_content").value;
+    var inputElement = document.getElementById("input_image");
+    inputElement.addEventListener("change", handleFiles, false);
+    var fileList;
+    function handleFiles() {
+      fileList = this.files; /* now you can work with the file list */
+    }
+    $.ajax({
+      type:"POST",
+      url: "/real_story",
+      data: {
+        'input_title': title,
+        'input_content': content,
+        'input_image': fileList
+      },
+      dataType: "json",
+      success: function(e){
+        document.getElementById(_value+"_like_num").innerHTML = e.size + "명이 무서워합니다.";
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+  
+  function post_show(_value){
+    $.ajax({
+      type: "GET",
+      url: "/real_story/"+_value+"/ajax_show",
+      data:{
+        
+      },
+      dataType: "json",
+      success: function(e){
+        var list = document.getElementById("modal_body");
+        list.removeChild(list.childNodes[0]);
+        document.getElementById("title_place").innerHTML = e.post.title;
+        // document.getElementById("modal_body")
+        $("#modal_body").append("<section class=\"listA\"><div class\"container\"><div class=\"news\"><div class=\"mycard\"><div class=\"card-text\" id=\"photo_place\"> ");
+        
+        if (e.image[0] == null)
+          $("#photo_place").append("<div class=\"card-photo\"></div>");
+        else{
+          $("#photo_place").append("<div class=\"bxslider\" id=\"photo_zone\">");
+          // alert(e.size);
+          for (var i = 0; i < e.size; i++){
+            $("#photo_zone").append("<div class=\"card-photo2\">");
+            $("#photo_zone").append("<img src=" + e.image[i] + "></img></div>");
+          }
+        }
+        $("#modal_body").append("</section></div></div></div></div></div>");
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
 
 //무한스크롤 코드 
-  var count = 4;
-  var stringTemp = ""
-  function call(){
-      $.ajax({
-          type:"get",
-          url:"/post/ajaxCall",
-          data : {'count' : count},
-          dataType : "json",
-          success: function(data){
-              alert(data[title]);
-          },
-          error: function(error) {
-              alert("#");
-          }  
-      });
-    }
+  // var count = 4;
+  // var stringTemp = ""
+  // function call(){
+  //     $.ajax({
+  //         type:"get",
+  //         url:"/post/ajaxCall",
+  //         data : {'count' : count},
+  //         dataType : "json",
+  //         success: function(data){
+  //             alert(data[title]);
+  //         },
+  //         error: function(error) {
+  //             alert("#");
+  //         }  
+  //     });
+  //   }
     
-    var page = 1;
+  //   var page = 1;
   
-    $(window).scroll(function() {
-        if ($(document).height() > $(window).height()) {
-           $("#enters").append("<h1>Page</h1>" + page );
-          call();
-        }
-    });
+  //   $(window).scroll(function() {
+  //       if ($(document).height() > $(window).height()) {
+  //         $("#enters").append("<h1>Page</h1>" + page );
+  //         call();
+  //       }
+  //   });
 </script>

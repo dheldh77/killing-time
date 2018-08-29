@@ -2,9 +2,9 @@ class RealStoryReplyController < ApplicationController
   before_action :authenticate_user!, except: [:create]
   
   def create
-    puts "@@@@@@@@@@@@"
-    puts params[:real_story_id]
-    puts params[:content]
+    # puts "@@@@@@@@@@@@"
+    # puts params[:real_story_id]
+    # puts params[:content]
     @reply = Reply.create(post_id: params[:real_story_id], user_id: current_user.id, content: params[:content])
     @reply.save
   

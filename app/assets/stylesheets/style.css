@@ -824,3 +824,29 @@ a#MOVE_TOP_BTN {
         bottom:50px;
     }
 }
+
+.move{
+    font-size:24px;
+    top:72px;
+    z-index:99;
+    position: absolute;
+    width: 700px;
+    height: 70px;
+    background-color: transparent;
+    animation-name: move;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode:both
+    
+}
+
+@keyframes move {
+    /* keyframe */
+    from {
+    left: 0;
+    }
+    /* keyframe */
+    to {
+    left: 250px;
+    }
+}

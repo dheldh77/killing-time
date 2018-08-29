@@ -63,7 +63,7 @@ class RealStoryController < ApplicationController
     @post.title = params[:input_title]
     @post.content = params[:input_content]
     
-   if params[:image].nil?
+    if params[:image].nil?
       @post.save
     else
       params[:image].each do |i|
@@ -75,15 +75,22 @@ class RealStoryController < ApplicationController
       end
       @post.save
     end
-    
-    
+    # puts "@@@@@@@@@@@@@@@"
     redirect_to  "/real_story/post/my_post"
+    # puts "222222222222222"
     # redirect_to  "/post/show/" + params[:id]로 해도 된다.
   end
 
   def edit
     @token = form_authenticity_token
     @post = Post.find(params[:id])
+    
+    @rev ={
+      :title => @post.title,
+      :content => @post.content,
+      :token => @token
+    }
+    render json: @rev
   end
 
   def destroy
@@ -161,15 +168,26 @@ class RealStoryController < ApplicationController
     end
   end
   
-  def ajaxCall
-    count = params[:count].to_i
-    @item = Post.all.at(count)
-    @return_value = {
-      "id" => @item.id, 
-      "username" => @item.user_id, 
-      "title" => @item.title, 
-      "time" => @item.created_at
+  def ajax_show
+    @post = Post.find(params[:id])
+    
+    @rev = {
+      :post => @post,
+      :size => @post.image.size,
+      :image => @post.image
     }
-    render json: @return_value
+    render json: @rev
   end
+  
+  # def ajaxCall
+  #   count = params[:count].to_i
+  #   @item = Post.all.at(count)
+  #   @return_value = {
+  #     "id" => @item.id, 
+  #     "username" => @item.user_id, 
+  #     "title" => @item.title, 
+  #     "time" => @item.created_at
+  #   }
+  #   render json: @return_value
+  # end
 end

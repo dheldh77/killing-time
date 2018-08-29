@@ -4,20 +4,15 @@
     <div class="modal fade" id="view-content" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+          
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="title_place">Modal title</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="image">
-              요기 그림
-              <img id="view-image" src=""></img>
-            </div>
-            <div class="content">
-              <p id="modal-content"></p>
-            </div>
+          <div class="modal-body" id="modal_body">
+            
           </div>
         </div>
       </div>
@@ -36,21 +31,34 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form action="" method="patch" enctype="multipart/form-data">
-          <input name="authenticity_token" type="hidden" value="<%= @token %>"></input>
-          <div class="form-group">
-            <label for="exampleFormControlInput1">제목</label>
-            <input id="edit_title" name="input_title" type="text" class="form-control" id="exampleFormControlInput1" value="">
-          </div>
-          <div class="form-group">
-            <label for="exampleFormControlTextarea1">내용</label>
-            <textarea id="edit_content" name="input_content" class="form-control" id="exampleFormControlTextarea1" rows="10" ></textarea>
-          </div>
+        
+        <div class="edit_post">
+          <label for="exampleFormControlInput1">제목</label>
+          <input type="text" class="form-control" id="edit_title">
+          
+          <label for="exampleFormControlTextarea1">내용</label>
+          <textarea class="form-control" id="edit_content" rows="10"></textarea>
+          
           <div class="modal-footer">
-            <input style="color: #212121"class="my-input" name="image[]" type="file" accept="image/*" multiple="multiple">
-            <button type="submit" class="my-btn">수정하기</button>
+            <input style="color: #212121" id="edit_image" class="my-input" name="image[]" type="file" accept="image/*" multiple="multiple" onchange="handleFiles(this.files)">
+            <button class="my-btn" id="edit_btn">수정</button>
           </div>
-        </form>
+        </div>
+        
+        <!--<form method="PATCH" enctype="multipart/form-data" id="edit_form">-->
+        <!--  <input name="authenticity_token" id="edit_token" type="hidden"></input>-->
+        <!--  <div class="form-group">-->
+        <!--    <label for="exampleFormControlInput1">제목</label>-->
+        <!--    <input name="input_title" type="text" class="form-control" id="edit_title">-->
+        <!--  </div>-->
+        <!--  <div class="form-group">-->
+        <!--    <label for="exampleFormControlTextarea1">내용</label>-->
+        <!--    <textarea name="input_content" class="form-control" id="edit_content" rows="10" ></textarea>-->
+        <!--  </div>-->
+        <!--  <input class="my-input" name="image[]" type="file" accept="image/*" multiple>-->
+        <!--  <button type="submit" class="my-btn">수정</button>-->
+        <!--</form>-->
+        
       </div>
     </div>
   </div>
@@ -115,12 +123,12 @@
               </p>
               </li>
               <li>
+                
                 <div class="edit">
-                  <button type="button" class="modal-btn" data-toggle="modal" data-target="#exampleModal" data-p="<%= p %>" data-id="<%= p.id %>" data-title="<%=p.title %>" data-content="<%=p.content%>"><i class="fas fa-edit"></i></button>
-                  
-                  <!--<a href="/real_story/edit/<#%= p.id %>"><i class="fas fa-edit"></i></a>-->
+                  <button type="button" onClick="post_edit('<%=p.id%>')" class="modal-btn" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-edit"></i></button>
                   <a href="/real_story/<%= p.id %>" data-method="delete"><i class="fas fa-trash-alt"></i></a>
                 </div>
+                
               </li>
             </ul>
           </div>
@@ -139,26 +147,34 @@
           <div class="content">
             <div class="icon">
               <% if current_user.is_like?(p) %>
-                <%#= link_to "좋아요 취소", likes1_path(p), method: "post" %>
-                <a href="/likes/likes_toggle/<%=p.id%>"><i style="color:rgb(184,0,0);" class="fas fa-skull"></i></a>
+                <button onClick="like_button('<%=p.id%>')">
+                  <i style="color:rgb(184,0,0);" class="fas fa-skull <%=p.id%>_like_btn" id="<%=p.id%>_like_btn"></i>
+                </button>
               <% else %>
-                <a href="/likes/likes_toggle/<%=p.id%>"><i class="fas fa-skull"></i></a>
-                <%#= link_to "좋아요", likes1_path(p), :method => "post" %>
+                <button onClick="like_button('<%=p.id%>')">
+                  <i class="fas fa-skull <%=p.id%>_like_btn"></i>
+                </button>
               <% end %>
+              
               <div>
-                <button type="button" class="search" data-toggle="modal" data-target="#view-content" 
-                data-content="<%= p.content %>"
-                data-title="<%= p.title %>"><i class="fas fa-search"></i></button>
+                <button onClick="post_show('<%=p.id%>')" data-toggle="modal" data-target="#view-content" class="search">
+                  <i class="fas fa-search"></i>
+                </button>
+                
                 <% if current_user.is_bookmark?(p) %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="fas fa-bookmark"></i></a>
+                  <button onClick="bookmark_button('<%=p.id%>')">
+                    <i class="fas fa-bookmark <%=p.id%>_bookmark_btn"></i>
+                  </button>
                 <% else %>
-                  <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i class="far fa-bookmark"></i></a>
+                  <button onClick="bookmark_button('<%=p.id%>')">
+                    <i class="far fa-bookmark <%=p.id%>_bookmark_btn"></i>
+                  </button>
                 <% end %>
               </div>
               
             </div>
-            <div class="show-bar" id="like_button">
-              <p><%= p.liked_users.size%>명이 무서워합니다.</p>
+            <div class="show-bar">
+              <p id="<%=p.id%>_like_num"><%= p.liked_users.size%>명이 무서워합니다.</p>
               <button class="btn" type="button" data-toggle="collapse" data-target="#collapse<%= p.id%>" aria-expanded="false" aria-controls="collapseExample">
                 <p>내용보기 <i class="fas fa-caret-down"></i></p>
               </button>
@@ -170,7 +186,7 @@
               </div>
             </div>
             <hr/>
-            <div class="reply" id="rr">
+            <div class="reply" id="<%=p.id%>_rr">
               <% if p.replies.size > 2 %>
                 <div style="display:flex; justify-content:flex-end;">
                   <button style="margin-top:5px; padding: 0;" class="btn" type="button" data-toggle="collapse" data-target="#replies<%= p.id %>" aria-expanded="false" aria-controls="collapseExampl">
@@ -184,7 +200,7 @@
                 <% if i > 2 %>
                   <% break %>
                 <% end %>
-                <div class="reply-content" id="rrr">
+                <div class="reply-content" id="<%=p.id%>_rrr">
                   <p><%= r.user.username %>: <%= r.content %></p>
                   <a href="/real_story/<%=p.id%>/real_story_reply/<%= r.id %>" data-method="delete">
                     <i style="color:#212121; font-size:10px" class="fas fa-eraser reply_icon"></i>
@@ -228,7 +244,7 @@
         </ul>
         <ul class="bookmark">
           <% @bookmarks.each do |p| %>
-            <li>
+            <li id="<%=p.id%>_bookmark_list">
               <% if p.image.first.nil? %>
                 <div class="thumb-photo">
                   <a href="/real_story/<%=p.id%>"><img src="/assets/bg.jpg"></a>
@@ -240,9 +256,9 @@
               <% end %>
               <a href="/real_story/<%=p.id%>"><h1><%= p.title %></h1></a>
               <% if current_user.is_bookmark?(p) %>
-                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color: #c7c7c7;"class="fas fa-bookmark icon"></i></a>
+                <button onClick="bookmark_button('<%=p.id%>')"><i style="color: #c7c7c7;"class="fas fa-bookmark icon"></i></button>
               <% else %>
-                <a href="/bookmarks/bookmarks_toggle/<%=p.id%>"><i style="color:#c7c7c7;" class="far fa-bookmark icon"></i></a>
+                <button onClick="bookmark_button('<%=p.id%>')"><i style="color:#c7c7c7;" class="far fa-bookmark icon"></i></button>
               <% end %>
             </li>
           <% end %>
@@ -253,29 +269,195 @@
 </section>
 
 <script>
-  function reply_create(_value){
+    function reply_create(_value){
     var id = _value
     var content = document.getElementById(_value + "_reply_content").value;
     // alert(_value);
     // alert(content);
       $.ajax({
           type:"POST",
-          url:"/real_story/post/my_post"+id+"/real_story/post/my_post_reply",
+          url:"/real_story/"+id+"/real_story_reply",
           data : {
             'content' : content,
-            'real_story/post/my_post_id': id
+            'real_story_id': id
           },
           dataType : "json",
           success: function(e){
             // alert(e.user.username)
             $("#"+_value+"_reply_content").val("");
             $("#"+_value+"_rr").append("<div class=\"reply-content\"><p>"+e.user.username+": "+e.reply.content+"</p>"+
-            "<a href=\"/real_story/post/my_post/"+_value+"/real_story/post/my_post_reply/"+e.reply.id+"\"" + " data-method=\"delete\"><i style=\"color:#212121; font-size:10px\" class=\"fas fa-eraser reply_icon\"></i><br></div>");
+            "<a href=\"/real_story/"+_value+"/real_story_reply/"+e.reply.id+"\"" + " data-method=\"delete\"><i style=\"color:#212121; font-size:10px\" class=\"fas fa-eraser reply_icon\"></i><br></div>");
           },
           error: function(xhr, status, error) {
               alert(error);
           }
       });
+  }
+  
+  function like_button(_value){
+    $.ajax({
+      type:"POST",
+      url: "/likes/likes_toggle/"+_value,
+      dataType: "json",
+      success: function(e){
+          // alert("@");
+        // alert(str);
+        if (e.like)
+          document.getElementsByClassName(_value+"_like_btn")[0].setAttribute("style","color:rgb(184,0,0)");
+        else
+          document.getElementsByClassName(_value+"_like_btn")[0].removeAttribute("style");
+        document.getElementById(_value+"_like_num").innerHTML = e.size + "명이 무서워합니다.";  
+      },
+      error: function(xhr, status, error){
+        alert(error);
+      }
+    });
+  }
+  
+  function bookmark_button(_value){
+    $.ajax({
+      type:"POST",
+      url: "/bookmarks/bookmarks_toggle/"+_value,
+      dataType: "json",
+      success: function(e){
+          // alert("@");
+        // alert(str);
+        // alert(e.bookmark);
+        if (e.bookmark){
+          document.getElementsByClassName(_value+"_bookmark_btn")[0].setAttribute("class","fas fa-bookmark " + _value + "_bookmark_btn");
+          $(".bookmark").append("<li id=\""+_value+"_bookmark_list\">");
+          
+          if (e.image[0] == null){
+            $("#"+_value+"_bookmark_list").append("<div class=\"thumb-photo\"><a href=\"/real_story/"+e.id+"\"><img src=\"/assets/bg.jpg\"></a></div>");
+          }
+          else{
+            $("#"+_value+"_bookmark_list").append("<div class=\"thumb-photo2\"><a href=\"/real_story/"+e.id+"\"><img src=" + e.image[0] + "></img></a></div>");
+          }
+          $("#"+_value+"_bookmark_list").append("<a href=\"/real_story/"+e.id+"\"><h1>"+e.title+"</h1></a>");
+          $("#"+_value+"_bookmark_list").append("<button onClick=\"bookmark_button('"+e.id+"')\"><i style=\"color: #c7c7c7;\"class=\"fas fa-bookmark icon\"></i></button>");
+          $(".bookmark").append("</li>");
+        }
+        else{
+          document.getElementsByClassName(_value+"_bookmark_btn")[0].setAttribute("class","far fa-bookmark " + _value + "_bookmark_btn");
+          var x = document.getElementById(_value+"_bookmark_list");
+          x.remove(x.selectedIndex);
+        }
+      },
+      error: function(xhr, status, error){
+        alert(error);
+      }
+    });
+  }
+  
+  function create_post(){
+    var title = document.getElementById("input_title").value;
+    var content = document.getElementById("input_content").value;
+    var inputElement = document.getElementById("input_image");
+    inputElement.addEventListener("change", handleFiles, false);
+    var fileList;
+    function handleFiles() {
+      fileList = this.files; /* now you can work with the file list */
+    }
+    $.ajax({
+      type:"POST",
+      url: "/real_story",
+      data: {
+        'input_title': title,
+        'input_content': content,
+        'image': fileList
+      },
+      dataType: "json",
+      success: function(e){
+        
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+  
+  function post_show(_value){
+    $.ajax({
+      type: "GET",
+      url: "/real_story/"+_value+"/ajax_show",
+      data:{
+        
+      },
+      dataType: "json",
+      success: function(e){
+        var list = document.getElementById("modal_body");
+        list.removeChild(list.childNodes[0]);
+        document.getElementById("title_place").innerHTML = e.post.title;
+        // document.getElementById("modal_body")
+        $("#modal_body").append("<section class=\"listA\"><div class\"container\"><div class=\"news\"><div class=\"mycard\"><div class=\"card-text\" id=\"photo_place\"> ");
+        
+        if (e.image[0] == null)
+          $("#photo_place").append("<div class=\"card-photo\"></div>");
+        else{
+          $("#photo_place").append("<div class=\"bxslider\" id=\"photo_zone\">");
+          // alert(e.size);
+          for (var i = 0; i < e.size; i++){
+            $("#photo_zone").append("<div class=\"card-photo2\">");
+            $("#photo_zone").append("<img src=" + e.image[i] + "></img></div>");
+          }
+        }
+        $("#modal_body").append("</section></div></div></div></div></div>");
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+  
+  function post_edit(_value){
+    
+    $.ajax({
+      type:"GET",
+      url: "/real_story/"+_value+"/edit",
+      data: {
+        
+      },
+      dataType: "json",
+      success: function(e){
+        // document.getElementById("edit_token").setAttribute("value",e.token);
+        // document.getElementById("edit_form").setAttribute("action","/real_story/"+_value);
+        document.getElementById("edit_title").setAttribute("value",e.title);
+        document.getElementById("edit_content").innerHTML = e.content;
+        document.getElementById("edit_btn").setAttribute("onClick","update_post('"+_value +"')");
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+  
+  function update_post(_value){
+    var title = document.getElementById("edit_title").value;
+    var content = document.getElementById("edit_content").value;
+    // var inputElement = document.getElementById("edit_image");
+    
+    // inputElement.addEventListener("change", handleFiles, false);
+    // var fileList;
+    // function handleFiles() {
+    //   fileList = this.files;
+    // }
+
+    $.ajax({
+      type:"PATCH",
+      url: "/real_story/"+_value,
+      data: {
+        'input_title': title,
+        'input_content': content
+        // 'image': fileList
+      },
+      // dataType: "html",
+      success: function(e){
+        
+      },
+      error: function(request, status ,error){
+        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+      }
+    });
   }
 </script>
 

@@ -1,12 +1,12 @@
 class LikesController < ApplicationController
   def likes_toggle
-    puts "1111111111111"
+    # puts "1111111111111"
     # puts "asdfasfasdfasdfasdfasdfasdfasd #{params[:post_id]}"
        like = Like.find_by(user_id: current_user.id, post_id: params[:id]) 
        @post = Post.find(params[:id])
        
        if like.nil?
-         puts "@@@@@@@@@@@@@@"
+        # puts "@@@@@@@@@@@@@@"
            Like.create(user_id: current_user.id, post_id: params[:id])
         
         #   위의 한 줄과 똑같다.
@@ -17,19 +17,20 @@ class LikesController < ApplicationController
         
         @rev = {
          :like => 1,
-         :post => @post
+         :post => @post,
+         :size => @post.liked_users.size
        }
        else
-         puts "3333333333"
+        # puts "3333333333"
            like.destroy
-           @rs = Post.find(params[:id])
            
            @rev = {
              :like => 0,
-             :post => @post
+             :post => @post,
+             :size => @post.liked_users.size
            }
        end
-       puts "$44444444444@"
+      # puts "$44444444444@"
        
       render json: @rev
   end

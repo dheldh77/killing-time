@@ -70,6 +70,11 @@
     </div>
   </header>
   <%= yield %>
+  <section class="move">
+    <div class="container">
+      <h1>산하형화이팅</h1>
+    </div>
+  </section>
   <section class="top-btn">
     <div class="container">
       <a id="MOVE_TOP_BTN" href="#"><i class="fas fa-angle-up"></i></a>
@@ -98,48 +103,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script>
-    $('#exampleModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var recipient = button.data('id');
-      var title = button.data('title');
-      var content = button.data('content');
-      var p = button.data('p');
-      var modal = $(this)
+    // $('#exampleModal').on('show.bs.modal', function (event) {
+    //   var button = $(event.relatedTarget);
+    //   var recipient = button.data('id');
+    //   // var title = button.data('title');
+    //   // var content = button.data('content');
+    //   // var p = button.data('p');
+    //   var modal = $(this)
 
-      modal.find('form').attr('action','/real_story/'+recipient);
-      modal.find('#edit_title').attr('value',title);
-      modal.find('#edit_content').val(content)
-      // 아 좃같다 자바스크립트
-    });
+    //   modal.find('form').attr('action','/real_story/'+recipient);
+    //   modal.find('form').attr('method','patch');
+    //   modal.find('#edit_title').attr('value',title);
+    //   modal.find('#edit_content').val(content)
+    
+    // });
   </script>
   <script>
-    $('#view-content').on('show.bs.modal', function (event) {
-      alert("!!!");
-      var button = $(event.relatedTarget);
-      var title = button.data('title');
-      var content = button.data('content');
-      var size = button.data('size');
+    // $('#view-content').on('show.bs.modal', function (event) {
+    //   var button = $(event.relatedTarget);
+    //   var title = button.data('title');
+    //   var content = button.data('content');
+
       
-      
-      var arr = new Array();
-      for(var i=0; i<size; i++){
-        arr[i] = button.data('image'+i)
-      }
-      var modal = $(this)
-      
-      for(var i = 0; i<size; i++){
-        // alert(arr[i]);
-        modal.find('#view-image'+i).attr('src',arr[i]);
-      }
-      
-      for(var i = size; i<10; i++){
-        modal.find('#view-image'+i).attr('src',null);
-      }
-      
-      modal.find('.modal-title').text(title);
-      modal.find('#modal-content').text(content);
-      // 아 좃같다 자바스크립트
-    });
+    //   modal.find('.modal-title').text(title);
+    //   modal.find('#modal-content').text(content);
+    //   // 아 좃같다 자바스크립트
+    // });
   </script>
   <script>
     $(document).ready(function () {
@@ -166,18 +155,6 @@
             return false;
         });
     });
-</script>
-
-<script>
-  // $(function ex(){
-  //   // var str = ("#textarea1").val();
-  //   // alert("@@" +document.getElementById("textarea1").value);
-  //   alert("@@"+("#textarea1").val());
-  //   str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-  //   // alert(str);
-  //   document.getElementById("textarea1").value = str;
-  // });
-
 </script>
 
 <!--댓글달기-->

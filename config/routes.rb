@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   
   get 'real_story/post/search', to: 'real_story#search'
   
-  get 'post/ajaxCall' => 'post#ajaxCall'
+  get 'real_story/:id/ajax_show' => 'real_story#ajax_show'
 
 # real_story_routes
   # post 'real_story_reply/create'
