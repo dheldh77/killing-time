@@ -2,9 +2,10 @@ class WelcomeController < ApplicationController
   require 'mechanize'
   
   def index
-    @posts = Post.joins("LEFT OUTER JOIN Likes ON likes.post_id = posts.id 
-                     AND likes.created_at >= DATETIME('now', '-1 day')")
-                    .group("posts.id").order("COUNT(likes.id) DESC")
+    # @posts = Post.joins("LEFT OUTER JOIN Likes ON likes.post_id = posts.id 
+    #                 AND likes.created_at >= DATETIME('now', '-1 day')")
+    #                 .group("posts.id").order("COUNT(likes.id) DESC")
+    @posts = Post.all
   end
   
   def user_data
