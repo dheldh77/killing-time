@@ -11,8 +11,8 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
+          
           <div class="modal-body" id="modal_body">
-            
           </div>
         </div>
       </div>
@@ -98,9 +98,11 @@
               <% end %>
               
               <div>
+                <% if p.image.size > 0 %>
                 <button onClick="post_show('<%=p.id%>')" data-toggle="modal" data-target="#view-content" class="search">
                   <i class="fas fa-search"></i>
                 </button>
+                <% end %>
                 
                 <% if current_user.is_bookmark?(p) %>
                   <button onClick="bookmark_button('<%=p.id%>')">
@@ -329,25 +331,25 @@
         var list = document.getElementById("modal_body");
         list.removeChild(list.childNodes[0]);
         document.getElementById("title_place").innerHTML = e.post.title;
-        // document.getElementById("modal_body")
-        $("#modal_body").append("<section class=\"listA\"><div class\"container\"><div class=\"news\"><div class=\"mycard\"><div class=\"card-text\" id=\"photo_place\"> ");
+        // document.getElementById("modal_content").innerHTML = e.post.content;
+        $("#modal_body").append("<div id=\"photo_place\"> ");
         
         if (e.image[0] == null)
-          $("#photo_place").append("<div class=\"card-photo\"></div>");
+          $("#photo_place").append("<div id=\"photo_zone\"><img src=\"assets/9.jpg\" width=100% ></div>");
         else{
-          $("#photo_place").append("<div class=\"bxslider\" id=\"photo_zone\">");
           // alert(e.size);
           for (var i = 0; i < e.size; i++){
-            $("#photo_zone").append("<div class=\"card-photo2\">");
-            $("#photo_zone").append("<img src=" + e.image[i] + "></img></div>");
+            $("#photo_place").append("<div id=\"photo_zone\"><img src=" + e.image[i] + " width=100%></div>");
           }
         }
-        $("#modal_body").append("</section></div></div></div></div></div>");
+        $("#modal_body").append("</div>");
       },
       error: function(xhr, status ,error){
         alert(error);
       }
     });
+    
+    //왜 css가 안먹히는거양 힝 
   }
 
 //무한스크롤 코드 
