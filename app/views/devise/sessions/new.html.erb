@@ -6,26 +6,25 @@
           <%= f.label :이메일 %><br />
           <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'my-input'%>
         </div>
-      
+
         <div class="field">
           <%= f.label :비밀번호 %><br />
           <%= f.password_field :password, autocomplete: "off", class: 'my-input'%>
         </div>
-      
+
         <% if devise_mapping.rememberable? -%>
           <div class="field">
             <%= f.check_box :remember_me %>
             <%= f.label :기억하기 %>
           </div>
         <% end %>
-      
+
         <div class="actions">
           <%= f.submit "로그인", class: 'my-btn'%>
         </div>
       <% end %>
+
     
-      <%= render "users/shared/links" %>
     </div>
   </div>
 </section>
-
