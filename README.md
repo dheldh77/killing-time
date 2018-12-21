@@ -1,24 +1,13 @@
+<h2> 루비 온 레일즈를 활용한 sns 구현 <h2>
+     
+ 
+<h3> 실행화면 </h3>
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
-
-
-Welcome to your Rails project on Cloud9 IDE!
-
-To get started, just do the following:
-
-1. Run the project with the "Run Project" button in the menu bar on top of the IDE.
-2. Preview your new app by clicking on the URL that appears in the Run panel below (https://HOSTNAME/).
-
-Happy coding!
-The Cloud9 IDE team
-
-
-## Support & Documentation
-
-Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE. 
-To watch some training videos, visit http://www.youtube.com/user/c9ide
+<h4> 인기 순위별로 나열된 메인 화면 <h4>
+     ![title](/img/1.png)
+<h4> 로그인 화면 <h4>
+     ![title](/img/2.png)
+<h4> 최신 순으로 글을 볼수 있는 post 화면 <h4>
+     ![title](/img/3.png)
+<h4> 글쓰기 화면 <h4>
+     ![title](/img/4.png)
